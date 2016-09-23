@@ -34,9 +34,11 @@ class Main(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         self.ui = Ui_PDRMainWindow()
         self.ui.setupUi(self)
-        self.initialize_project()
-#        self.projectWindow = QMdiSubWindow()
+        
         self.projectWidget = ProjectWindow()
+        
+#        self.projectWindow = QMdiSubWindow()
+        
 
 #        self.projectWindow.setWidget(self.projectWidget)
 #        self.ui.mdiArea.addSubWindow(self.projectWindow)
@@ -49,21 +51,21 @@ class Main(QtGui.QMainWindow):
         self.setup_signals()
         
 
-    def initialize_project(self):
-        print 'initializing'
-        prj_files = glob.glob( '../data/*.conf')
-        
-        self.projects = {}
-        
-        for config in prj_files:
-            path_fname = list(os.path.split(os.path.abspath(config)))
-            config_name = os.path.splitext(path_fname[1])[0]
-            self.projects[config_name] = path_fname
-            
-        for prj_name in self.projects:
-            print "Adding " + prj_name
-
-            
+#     def initialize_project(self):
+#         print 'initializing'
+#         prj_files = glob.glob( './data/*.conf')
+#         
+#         self.projects = {}
+#         
+#         for config in prj_files:
+#             path_fname = list(os.path.split(os.path.abspath(config)))
+#             config_name = os.path.splitext(path_fname[1])[0]
+#             self.projects[config_name] = path_fname
+#             
+#         for prj_name in self.projects:
+#             print "Adding " + prj_name
+# 
+#         return prj_files
             
         
     def show_about(self):

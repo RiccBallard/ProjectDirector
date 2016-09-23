@@ -21,10 +21,10 @@ class ProjectWindow(QtGui.QWidget):
     __tagnames     = {}
     __props        = {}
     __project_data = {}
-    __data_dir     = '../data/'
+    __data_dir     = './data/'
     __fileio       = False
     
-    def __init__(self, widget=None):
+    def __init__(self, files=None):
         print "initializing dialog"
         super(ProjectWindow, self).__init__()
                     
@@ -40,7 +40,8 @@ class ProjectWindow(QtGui.QWidget):
               
     def load_projects(self):
         print "Loading projects"
-        self.__fileio = True
+#        self.__fileio = True
+        
         prj_files = glob.glob( self.__data_dir + '*.conf')
         
         for config in prj_files:
@@ -56,9 +57,10 @@ class ProjectWindow(QtGui.QWidget):
             listitem = self.ui.projectListWidget.addItem(prj_name)
             if not first_item:
                 first_item = listitem
-                
+        
+#        self.__fileio = False        
         self.ui.projectListWidget.setCurrentRow(0)
-        self.__fileio = False
+        
 
         
     def on_prj_menu(self, QPos):
@@ -152,11 +154,7 @@ class ProjectWindow(QtGui.QWidget):
             print "data project failed"
 
     def project_changed(self, item):
-        if self.__fileio:
-            return
-        
         current_project = str(item.text())
-        self.__fileio = True
         print "Project now " + current_project
         if not current_project in self.__projects:
             return
@@ -174,13 +172,13 @@ class ProjectWindow(QtGui.QWidget):
             
             
             self.ui.TagListWidget.clear()
-            for tagname in self.__project_data[current_project]:
-                self.ui.TagListWidget.addItem(tagname)
+            for prj_name in self.__project_data[current_project]:
+                print "data set " + str(self.__project_data[current_project][prj_name])
+                for tag_name in self.__project_data[current_project][prj_name]:
+                    self.ui.TagListWidget.addItem(tag_name)
 
             self.ui.dataListWidget.setCurrentRow(0);
             self.tag_name_changed(self.ui.TagListWidget.currentItem());
-
-        self.__fileio = False
         
 
     def tag_name_changed(self, item):
@@ -189,12 +187,13 @@ class ProjectWindow(QtGui.QWidget):
             return
         
         self.ui.dataListWidget.clear()
+
+        data = []        
+        current_project = str(self.ui.projectListWidget.currentItem().text())
+        tagname = str(self.ui.TagListWidget.currentItem().text())
+        data = self.__projects[current_project][tagname]
         
-        current_project = self.ui.projectListWidget.currentItem().text()
-        tagname = self.ui.TagListWidget.currentItem().text()
-        data = self.__projects[current_project]
-        
-        for prop_name in data[tagname]['properties']:
+        for prop_name in data:
             item =  QtGui.QListWidgetItem()
             item.setText(prop_name)
             self.ui.dataListWidget.addItem(item)
